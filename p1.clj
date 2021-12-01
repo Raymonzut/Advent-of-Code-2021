@@ -3,14 +3,19 @@
   (:gen-class))
 
 (defn countIncrements [numbers]
-  (count (filter #(< (first %) (second %))
-                 (drop 1 (map vector (conj numbers 0) numbers)))))
+  (->> numbers
+       (map vector (conj numbers 0))
+       (drop 1)
+       (filter #(< (first %) (second %)))
+       (count)
+       ))
 
 (defn threeWindows [numbers]
-  (let [windows (take-while #(= 3 (count %))
-                            (map-indexed (fn [i nums] (take 3 (drop i nums)))
-                                         (repeat numbers)))]
-    (map (partial reduce +) windows)))
+  (->> numbers
+       repeat
+       (map-indexed (fn [i nums] (take 3 (drop i nums))))
+       (take-while #(= 3 (count %)))
+       (map (partial reduce +))))
 
 (defn -main []
   (let [numbers (map #(Integer/parseUnsignedInt %) (str/split-lines (slurp "p1.in")))]
