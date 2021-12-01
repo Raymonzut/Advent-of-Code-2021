@@ -12,9 +12,7 @@
 
 (defn threeWindows [numbers]
   (->> numbers
-       repeat
-       (map-indexed (fn [i nums] (take 3 (drop i nums))))
-       (take-while #(= 3 (count %)))
+       (partition 3 1)
        (map (partial reduce +))))
 
 (defn -main []
