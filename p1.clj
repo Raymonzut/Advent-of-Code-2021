@@ -2,6 +2,15 @@
   (:require [clojure.string :as str])
   (:gen-class))
 
+(def filename "p1.in")
+
+(defn readInputParsed []
+  (->> filename
+       slurp
+       str/split-lines
+       (map #(Integer/parseUnsignedInt %))
+       ))
+
 (defn countIncrements [numbers]
   (->> numbers
        (map vector (conj numbers 0))
@@ -16,6 +25,6 @@
        (map (partial reduce +))))
 
 (defn -main []
-  (let [numbers (map #(Integer/parseUnsignedInt %) (str/split-lines (slurp "p1.in")))]
+  (let [numbers (readInputParsed)]
     (println (countIncrements numbers))
     (println (countIncrements (threeWindows numbers)))))
