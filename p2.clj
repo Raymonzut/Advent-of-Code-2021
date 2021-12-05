@@ -4,14 +4,14 @@
 
 (def filename "p2.in")
 
-(defn readInputParsed []
+(defn read-input-parsed []
   (->> filename
        slurp
        str/split-lines
        (map #(str/split % #" "))
        (map #(vector (first %) (Integer/parseUnsignedInt (second %))))))
 
-(defn simulatePart1 [instructions]
+(defn simulate-part-1 [instructions]
   (loop [horizontal 0
          depth 0
          instructions instructions]
@@ -23,7 +23,7 @@
         "up" (recur horizontal (- depth amount) (rest instructions))
         (* horizontal depth)))))
 
-(defn simulatePart2 [instructions]
+(defn simulate-part-2 [instructions]
   (loop [horizontal 0
          depth 0
          aim 0
@@ -37,6 +37,6 @@
         (* horizontal depth)))))
 
 (defn -main []
-  (let [instructionSet (readInputParsed)]
-    (println (simulatePart1 instructionSet))
-    (println (simulatePart2 instructionSet))))
+  (let [instruction-set (read-input-parsed)]
+    (println (simulate-part-1 instruction-set))
+    (println (simulate-part-2 instruction-set))))

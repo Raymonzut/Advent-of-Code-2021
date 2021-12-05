@@ -2,7 +2,8 @@
 
 (defn transpose [rows]
   (loop [columns []
-         remainingRows rows]
-    (if (empty? (first remainingRows))
+         remaining-rows rows]
+    (if (empty? (first remaining-rows))
       columns
-      (recur (conj columns (map first remainingRows)) (map rest remainingRows)))))
+      (recur (conj columns (map first remaining-rows))
+             (map rest remaining-rows)))))

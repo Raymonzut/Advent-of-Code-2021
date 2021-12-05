@@ -4,7 +4,7 @@
 
 (def filename "pn.in")
 
-(defn readInputParsed []
+(defn read-input-parsed []
   (->> filename
        slurp
        str/split-lines
@@ -16,5 +16,5 @@
        ))
 
 (defn -main []
-  (let [input (readInputParsed)]
+  (let [input (read-input-parsed)]
     (println (helper input))))

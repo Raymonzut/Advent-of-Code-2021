@@ -5,96 +5,96 @@
 
 (def filename "p4.in")
 
-(def MARKED -1)
+(def marked-cell -1)
 
-(def fileContents
+(def file-contents
   (->> filename
        slurp
        str/split-lines))
 
 
-(defn parseNumbers [row]
+(defn parse-numbers [row]
   (->> row
        (#(str/split % #","))
        (map #(Integer/parseUnsignedInt %))))
 
-(defn rowToNums [row]
+(defn parse-card-row [row]
   (map #(Integer/parseUnsignedInt %) row))
 
-(defn parseCard [cardText]
-  (->> cardText
+(defn parse-card [card-text]
+  (->> card-text
        (map #(str/split % #" "))
        (map #(filter not-empty %))
-       (map rowToNums)))
+       (map parse-card-row)))
 
-(defn parseBingoCards [rows]
+(defn parse-cards [rows]
   (loop [input rows
          cards []]
-    (let [newCard (take 5 input)]
+    (let [new-card (take 5 input)]
       (if (< (count input) 5)
         cards
-        (recur (drop 6 input) (conj cards (parseCard newCard)))))))
+        (recur (drop 6 input) (conj cards (parse-card new-card)))))))
 
 
-(defn hasHorizontalBingo [markedCard]
-  (some #(every? (partial = MARKED) %) markedCard))
+(defn bingo-horizontal? [marked-card]
+  (some #(every? (partial = marked-cell) %) marked-card))
 
-(defn hasVerticalBingo [markedCard]
-  (some #(every? (partial = MARKED) %) (lib/transpose markedCard)))
+(defn bingo-vertical? [marked-card]
+  (some #(every? (partial = marked-cell) %) (lib/transpose marked-card)))
 
 
-(defn markWith [bingoNumber cellNumber]
-  (if (= bingoNumber cellNumber)
-    MARKED
-    cellNumber))
+(defn mark-with [bingo-number cell-number]
+  (if (= bingo-number cell-number)
+    marked-cell
+    cell-number))
 
-(defn markRow [bingoNumber row]
-  (map (partial markWith bingoNumber) row))
+(defn mark-row [bingo-number row]
+  (map (partial mark-with bingo-number) row))
 
-(defn markCard [bingoNumber rows]
-  (map (partial markRow bingoNumber) rows))
+(defn mark-card [bingo-number rows]
+  (map (partial mark-row bingo-number) rows))
 
-(defn markCards [bingoNumber cards]
-  (map (partial markCard bingoNumber) cards))
+(defn mark-cards [bingo-number cards]
+  (map (partial mark-card bingo-number) cards))
 
-(defn scoreRow [row]
-  (reduce + (filter (partial not= MARKED) row)))
+(defn score-of-row [row]
+  (reduce + (filter (partial not= marked-cell) row)))
 
-(defn hasBingo [card]
-  (or (hasHorizontalBingo card)
-      (hasVerticalBingo card)))
+(defn bingo? [card]
+  (or (bingo-horizontal? card)
+      (bingo-vertical? card)))
 
-(defn scoreCard [card]
-  (if (hasBingo card)
-    (reduce + (map scoreRow card))
+(defn score-of-card [card]
+  (if (bingo? card)
+    (reduce + (map score-of-row card))
     0))
 
-(defn simulateBingoNightPart1 []
-  (loop [drawnBingoNumbers (parseNumbers (first fileContents))
-         bingoCards (parseBingoCards (drop 2 fileContents))]
-    (let [drawnNumber (first drawnBingoNumbers)
-          markedBingoCards (markCards drawnNumber bingoCards)
-          roundScores (map scoreCard markedBingoCards)]
-      (if (some #(> % 0) roundScores)
-        (* drawnNumber (first (filter #(> % 0) roundScores)))
-        (recur (rest drawnBingoNumbers) markedBingoCards)))))
+(defn simulate-bingonight-part1 []
+  (loop [numbers-drawn (parse-numbers (first file-contents))
+         bingo-cards (parse-cards (drop 2 file-contents))]
+    (let [number-drawn (first numbers-drawn)
+          marked-bingo-cards (mark-cards number-drawn bingo-cards)
+          round-scores (map score-of-card marked-bingo-cards)]
+      (if (some #(> % 0) round-scores)
+        (* number-drawn (first (filter #(> % 0) round-scores)))
+        (recur (rest numbers-drawn) marked-bingo-cards)))))
 
-(defn simulateBingoNightPart2 []
-  (loop [drawnBingoNumbers (parseNumbers (first fileContents))
-         bingoCards (parseBingoCards (drop 2 fileContents))
-         winningCards []]
-    (let [drawnNumber (first drawnBingoNumbers)
-          markedBingoCards (markCards drawnNumber bingoCards)
-          remainingCards (filter #(not (hasBingo %)) markedBingoCards)
-          newWinners (map vector (repeat drawnNumber) (filter hasBingo markedBingoCards))]
-      (if (= 0 (count drawnBingoNumbers))
-        (* (first (last winningCards))
-           (scoreCard (second (last winningCards))))
+(defn simulate-bingonight-part2 []
+  (loop [numbers-drawn (parse-numbers (first file-contents))
+         bingo-cards (parse-cards (drop 2 file-contents))
+         winning-cards []]
+    (let [number-drawn (first numbers-drawn)
+          marked-bingo-cards (mark-cards number-drawn bingo-cards)
+          remaining-cards (filter #(not (bingo? %)) marked-bingo-cards)
+          new-winners (map vector (repeat number-drawn) (filter bingo? marked-bingo-cards))]
+      (if (= 0 (count numbers-drawn))
+        (* (first (last winning-cards))
+           (score-of-card (second (last winning-cards))))
 
-        (recur (rest drawnBingoNumbers)
-               remainingCards
-               (concat winningCards newWinners))))))
+        (recur (rest numbers-drawn)
+               remaining-cards
+               (concat winning-cards new-winners))))))
 
 (defn -main []
-  (println (simulateBingoNightPart1))
-  (println (simulateBingoNightPart2)))
+  (println (simulate-bingonight-part1))
+  (println (simulate-bingonight-part2)))

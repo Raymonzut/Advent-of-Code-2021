@@ -4,57 +4,57 @@
 
 (def filename "p3.in")
 
-(defn toDigits [byteString]
+(defn to-digits [byteString]
   (map #(Character/digit % 2) byteString))
 
-(defn readInputParsed []
+(defn read-input-parsed []
   (->> filename
        slurp
        str/split-lines
-       (map toDigits)))
+       (map to-digits)))
 
-(defn asBase10 [bitArray]
+(defn as-base10 [bitArray]
   (->> bitArray
        (map str)
        (reduce str)
        (str "2r")
        (read-string)))
 
-(defn verticalRates [args]
+(defn vertical-rates [args]
   (loop [report args
          gamma [] ;; most common
          epsilon []] ;; least common
     (let [slice (map first report)
           zeros (count (filter #(= 0 %) slice))
           ones  (count (filter #(= 1 %) slice))]
-        (if (empty? (first report))
-          (* (asBase10 gamma) (asBase10 epsilon))
-          (if (> zeros ones)
-            (recur (map rest report) (conj gamma 0) (conj epsilon 1))
-            (recur (map rest report) (conj gamma 1) (conj epsilon 0)))))))
+      (if (empty? (first report))
+        (* (as-base10 gamma) (as-base10 epsilon))
+        (if (> zeros ones)
+          (recur (map rest report) (conj gamma 0) (conj epsilon 1))
+          (recur (map rest report) (conj gamma 1) (conj epsilon 0)))))))
 
 (defn take-masked [mask, arr]
   (map second (filter #(first %) (map vector mask arr))))
 
 (defn narrow [cmp args]
   (loop [report args
-         partialReport args]
-    (let [slice (map first partialReport)
+         partial-report args]
+    (let [slice (map first partial-report)
           zeros (count (filter #(= 0 %) slice))
           ones  (count (filter #(= 1 %) slice))]
         (if (= 1 (count report))
           (first report)
           (if (cmp zeros ones)
-            (recur (take-masked (map #(= 0 (first %)) partialReport) report)
-                   (map rest (filter #(= 0 (first %)) partialReport)))
-            (recur (take-masked (map #(= 1 (first %)) partialReport) report)
-                   (map rest (filter #(= 1 (first %)) partialReport))))))))
+            (recur (take-masked (map #(= 0 (first %)) partial-report) report)
+                   (map rest (filter #(= 0 (first %)) partial-report)))
+            (recur (take-masked (map #(= 1 (first %)) partial-report) report)
+                   (map rest (filter #(= 1 (first %)) partial-report))))))))
 
-(defn compoundRates [args]
-  (* (asBase10 (narrow > args)) (asBase10 (narrow <= args))))
+(defn compound-rates [args]
+  (* (as-base10 (narrow > args)) (as-base10 (narrow <= args))))
 
 
 (defn -main []
-  (let [input (readInputParsed)]
-    (println (verticalRates input))
-    (println (compoundRates input))))
+  (let [input (read-input-parsed)]
+    (println (vertical-rates input))
+    (println (compound-rates input))))

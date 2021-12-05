@@ -4,14 +4,14 @@
 
 (def filename "p1.in")
 
-(defn readInputParsed []
+(defn read-input-parsed []
   (->> filename
        slurp
        str/split-lines
        (map #(Integer/parseUnsignedInt %))
        ))
 
-(defn countIncrements [numbers]
+(defn count-increments [numbers]
   (->> numbers
        (map vector (conj numbers 0))
        (drop 1)
@@ -19,12 +19,12 @@
        (count)
        ))
 
-(defn threeWindows [numbers]
+(defn three-windows [numbers]
   (->> numbers
        (partition 3 1)
        (map (partial reduce +))))
 
 (defn -main []
-  (let [numbers (readInputParsed)]
-    (println (countIncrements numbers))
-    (println (countIncrements (threeWindows numbers)))))
+  (let [numbers (read-input-parsed)]
+    (println (count-increments numbers))
+    (println (count-increments (three-windows numbers)))))
