@@ -1,4 +1,5 @@
 (ns aoc.p4
+  (:use [aoc.lib :as lib])
   (:require [clojure.string :as str])
   (:gen-class))
 
@@ -35,19 +36,11 @@
         (recur (drop 6 input) (conj cards (parseCard newCard)))))))
 
 
-(defn transpose [rows]
-  (loop [columns []
-         remainingRows rows]
-    (if (empty? (first remainingRows))
-      columns
-      (recur (conj columns (map first remainingRows)) (map rest remainingRows)))))
-
-
 (defn hasHorizontalBingo [markedCard]
   (some #(every? (partial = MARKED) %) markedCard))
 
 (defn hasVerticalBingo [markedCard]
-  (some #(every? (partial = MARKED) %) (transpose markedCard)))
+  (some #(every? (partial = MARKED) %) (lib/transpose markedCard)))
 
 
 (defn markWith [bingoNumber cellNumber]
