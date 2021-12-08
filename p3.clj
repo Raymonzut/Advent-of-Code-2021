@@ -1,5 +1,5 @@
 (ns aoc.p3
-  (:require [clojure.string :as str])
+  (:use [aoc.lib :as lib])
   (:gen-class))
 
 (def filename "p3.in")
@@ -8,10 +8,7 @@
   (map #(Character/digit % 2) byteString))
 
 (defn read-input-parsed []
-  (->> filename
-       slurp
-       str/split-lines
-       (map to-digits)))
+  (slurp-lines-with to-digits filename))
 
 (defn as-base10 [bitArray]
   (->> bitArray

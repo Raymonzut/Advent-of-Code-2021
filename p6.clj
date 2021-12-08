@@ -1,16 +1,11 @@
 (ns aoc.p6
-  (:require [clojure.string :as str])
+  (:use [aoc.lib :as lib])
   (:gen-class))
 
 (def filename "p6.in")
 
 (defn read-input-parsed []
-  (->> filename
-       slurp
-       str/split-lines
-       first
-       (#(str/split % #","))
-       (map #(Integer/parseUnsignedInt %))))
+  (lib/slurp-single-number-seq #"," filename))
 
 (defn as-count-vec [fishies]
   (loop [counts (into [] (replicate 9 0))

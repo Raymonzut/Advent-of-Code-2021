@@ -1,17 +1,11 @@
 (ns aoc.p7
   (:use [aoc.lib :as lib])
-  (:require [clojure.string :as str])
   (:gen-class))
 
 (def filename "p7.in")
 
 (defn read-input-parsed []
-  (->> filename
-       slurp
-       str/split-lines
-       first
-       (#(str/split % #","))
-       (map #(Integer/parseUnsignedInt %))))
+  (lib/slurp-single-number-seq #"," filename))
 
 (defn align-cost-basic [positions, alignment]
   (->> positions

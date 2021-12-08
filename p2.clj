@@ -1,15 +1,17 @@
 (ns aoc.p2
+  (:use [aoc.lib :as lib])
   (:require [clojure.string :as str])
   (:gen-class))
 
 (def filename "p2.in")
 
+(defn parse-instruction [instruction-text]
+  (->> (str/split instruction-text #" ")
+       (#(vector (first %)
+                 (Integer/parseUnsignedInt (second %))))))
+
 (defn read-input-parsed []
-  (->> filename
-       slurp
-       str/split-lines
-       (map #(str/split % #" "))
-       (map #(vector (first %) (Integer/parseUnsignedInt (second %))))))
+  (slurp-lines-with parse-instruction filename))
 
 (defn simulate-part-1 [instructions]
   (loop [horizontal 0

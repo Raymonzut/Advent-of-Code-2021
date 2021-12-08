@@ -16,10 +16,7 @@
        (map parse-point)))
 
 (defn read-input-parsed []
-  (->> filename
-       slurp
-       str/split-lines
-       (map parse-line)))
+  (slurp-lines-with parse-line filename))
 
 (defn generate-range-hv [line]
   (let [[point1 point2] line]

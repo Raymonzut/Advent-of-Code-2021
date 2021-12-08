@@ -1,23 +1,19 @@
 (ns aoc.p1
-  (:require [clojure.string :as str])
+  (:use [aoc.lib :as lib])
   (:gen-class))
 
 (def filename "p1.in")
 
 (defn read-input-parsed []
-  (->> filename
-       slurp
-       str/split-lines
-       (map #(Integer/parseUnsignedInt %))
-       ))
+  (slurp-lines-with #(Integer/parseUnsignedInt %)
+                    filename))
 
 (defn count-increments [numbers]
   (->> numbers
        (map vector (conj numbers 0))
        (drop 1)
        (filter #(< (first %) (second %)))
-       (count)
-       ))
+       (count)))
 
 (defn three-windows [numbers]
   (->> numbers
