@@ -34,10 +34,10 @@
                (conj cards (parse-card new-card)))))))
 
 (def numbers-drawn
-  (parse-numbers (sips-lines first filename)))
+  (parse-numbers (sip-lines first filename)))
 
 (def bingo-cards
-  (parse-cards (sips-lines (partial drop 2) filename)))
+  (parse-cards (sip-lines (partial drop 2) filename)))
 
 (defn bingo-horizontal? [marked-card]
   (some #(every? (partial = marked-cell) %) marked-card))
