@@ -34,16 +34,16 @@
                (conj cards (parse-card new-card)))))))
 
 (def numbers-drawn
-  (parse-numbers (first file-contents)))
+  (parse-numbers (sips-lines first filename)))
+
 (def bingo-cards
-  (parse-cards (drop 2 file-contents)))
+  (parse-cards (sips-lines (partial drop 2) filename)))
 
 (defn bingo-horizontal? [marked-card]
   (some #(every? (partial = marked-cell) %) marked-card))
 
 (defn bingo-vertical? [marked-card]
   (some #(every? (partial = marked-cell) %) (lib/transpose marked-card)))
-
 
 (defn mark-with [bingo-number cell-number]
   (if (= bingo-number cell-number)

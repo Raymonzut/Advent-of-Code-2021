@@ -8,13 +8,22 @@
     (range p1 (inc p2))
     (reverse (range p2 (inc p1)))))
 
-(defn slurp-lines [filename]
+(defn sips-lines [cutter filename]
+  "Like slurp-lines, applies cutter on the gotten lines"
   (->> (slurp filename)
-       (str/split-lines)))
+       (str/split-lines)
+       (cutter)))
+
+(defn sips-lines-with [cutter line-parser filename]
+  "Like slurp-lines-with, applies cutter before parsing the lines"
+  (->> (sips-lines cutter filename)
+       (map line-parser)))
+
+(defn slurp-lines [filename]
+  (sips-lines identity filename))
 
 (defn slurp-lines-with [line-parser filename]
-  (->> (slurp-lines filename)
-       (map line-parser)))
+  (sips-lines-with identity line-parser filename))
 
 (defn slurp-single-number-seq [separator filename]
   (->> (slurp-lines filename)
