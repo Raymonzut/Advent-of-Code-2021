@@ -2,6 +2,13 @@
   (:require [clojure.string :as str])
   (:gen-class))
 
+(defn as-count-vec [size entries]
+  (loop [counts (into [] (replicate (dec size) 0))
+         left entries]
+    (if-let [fish (first left)]
+      (recur (update-in counts [fish] inc) (rest left))
+      counts)))
+
 (defn bi-rangi [p1 p2]
   "Range that works both ways, inclusive end"
   (if (< p1 p2)

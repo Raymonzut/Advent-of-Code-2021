@@ -7,13 +7,6 @@
 (defn read-input-parsed []
   (lib/slurp-single-number-seq #"," filename))
 
-(defn as-count-vec [fishies]
-  (loop [counts (into [] (replicate 9 0))
-         left-fishies fishies]
-    (if-let [fish (first left-fishies)]
-      (recur (update-in counts [fish] inc) (rest left-fishies))
-      counts)))
-
 (defn progress [fishies]
   (let [birthing-fishies (first fishies)
         born-fishies birthing-fishies
@@ -23,7 +16,7 @@
                [8] (fn [base] born-fishies))))
 
 (defn simulate [args day-limit]
-  (loop [state (as-count-vec args)
+  (loop [state (lib/as-count-vec 10 args)
          day-count 0]
       (if (= day-count day-limit)
         (reduce + state)
